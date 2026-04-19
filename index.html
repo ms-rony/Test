@@ -530,6 +530,20 @@
 
 
 
+                <!-- TOGETHER.AI (FREE ENDPOINTS - RECOMMENDED) -->
+
+                <optgroup label="Together.ai (Free Endpoints) 🔥">
+
+                    <option value="meta-llama/Llama-3.3-70B-Instruct-Turbo-Free" data-provider="together">Llama 3.3 70B Turbo FREE ⭐⭐</option>
+
+                    <option value="meta-llama/Llama-Vision-Free" data-provider="together">Llama Vision FREE ⭐</option>
+
+                    <option value="deepseek-ai/DeepSeek-R1-Distill-Llama-70B-free" data-provider="together">DeepSeek R1 Distill 70B FREE ⭐</option>
+
+                </optgroup>
+
+
+
                 <!-- OPENROUTER (FREE MODELS - WORKING 2025) -->
 
                 <optgroup label="OpenRouter (Free)">
@@ -548,15 +562,11 @@
 
                     <option value="mistralai/mistral-7b-instruct:free" data-provider="openrouter">Mistral 7B (Free)</option>
 
-                    <option value="qwen/qwen3-8b:free" data-provider="openrouter">Qwen3 8B (Free)</option>
-
                     <option value="qwen/qwen3-14b:free" data-provider="openrouter">Qwen3 14B (Free)</option>
 
                     <option value="deepseek/deepseek-r1:free" data-provider="openrouter">DeepSeek R1 (Free)</option>
 
                     <option value="deepseek/deepseek-chat-v3-0324:free" data-provider="openrouter">DeepSeek V3 (Free)</option>
-
-                    <option value="microsoft/phi-4-reasoning:free" data-provider="openrouter">Microsoft Phi-4 Reasoning (Free)</option>
 
                 </optgroup>
 
@@ -670,7 +680,7 @@
 
             keyHint.innerText = 'Google API Key required';
 
-            keyHint.style.color = '#10B981'; // Green
+            keyHint.style.color = '#10B981';
 
         } else if (provider === 'groq') {
 
@@ -678,7 +688,7 @@
 
             keyHint.innerText = 'Groq API Key required';
 
-            keyHint.style.color = '#F59E0B'; // Orange
+            keyHint.style.color = '#F59E0B';
 
         } else if (provider === 'openrouter') {
 
@@ -686,7 +696,15 @@
 
             keyHint.innerText = 'OpenRouter API Key required';
 
-            keyHint.style.color = '#4F46E5'; // Blue
+            keyHint.style.color = '#4F46E5';
+
+        } else if (provider === 'together') {
+
+            apiKeyInput.placeholder = 'your-together-api-key...';
+
+            keyHint.innerText = 'Together.ai API Key (Free $25 credits!)';
+
+            keyHint.style.color = '#8B5CF6';
 
         }
 
@@ -878,13 +896,17 @@ Format your output neatly. Provide the question first, then the answer below it.
 
 
 
-                } else if (provider === 'groq' || provider === 'openrouter') {
+                } else if (provider === 'groq' || provider === 'openrouter' || provider === 'together') {
 
-                    // Groq & OpenRouter use the exact same OpenAI-compatible structure
+                    // Groq, OpenRouter & Together.ai — all OpenAI-compatible
 
                     const url = provider === 'groq' 
 
                         ? 'https://api.groq.com/openai/v1/chat/completions'
+
+                        : provider === 'together'
+
+                        ? 'https://api.together.xyz/v1/chat/completions'
 
                         : 'https://openrouter.ai/api/v1/chat/completions';
 
@@ -966,7 +988,7 @@ Format your output neatly. Provide the question first, then the answer below it.
 
                 if (i < batches.length - 1) {
 
-                    progressStatus.innerText = `Cooling down for 6s to prevent Rate Limit (${provider})...`;
+                    progressStatus.innerText = `Cooling down 6s to avoid Rate Limit (${provider})...`;
 
                     progressStatus.classList.add('cooldown-msg');
 
