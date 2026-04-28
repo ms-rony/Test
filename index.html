@@ -2,11 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AI Answer Solver | Premium Edition</title>
+    
+    <!-- Modern Premium Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stable Docx Library -->
     <script src="https://unpkg.com/docx@8.2.3/build/index.js"></script>
+    
+    <!-- FileSaver.js - Robust cross-browser/mobile file saving -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -14,7 +22,7 @@
             --primary: #4338CA;
             --primary-hover: #3730A3;
             --secondary: #0F172A;
-            --bg: #F1F5F9;
+            --bg: #F8FAFC;
             --surface: #FFFFFF;
             --text-main: #1E293B;
             --text-muted: #64748B;
@@ -23,7 +31,6 @@
             --danger: #EF4444;
             --radius-lg: 16px;
             --radius-md: 10px;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.025);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -33,6 +40,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -43,18 +51,16 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            padding: 3rem 1rem;
+            padding: 2rem 1rem;
         }
 
         .container {
             width: 100%;
             max-width: 950px;
             background: var(--surface);
-            padding: 3rem;
+            padding: 2.5rem;
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-lg);
-            position: relative;
-            overflow: hidden;
         }
 
         .header-section {
@@ -63,7 +69,7 @@
         }
 
         .header-section h1 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 700;
             color: var(--secondary);
             letter-spacing: -0.02em;
@@ -71,17 +77,15 @@
 
         .header-section p {
             color: var(--text-muted);
-            font-size: 1rem;
+            font-size: 0.95rem;
             margin-top: 0.5rem;
         }
 
-        /* Views */
         #resultsView { display: none; }
 
-        /* Form Elements */
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
             margin-bottom: 1.5rem;
         }
@@ -125,15 +129,14 @@
             outline: none;
             border-color: var(--primary);
             background-color: var(--surface);
-            box-shadow: 0 0 0 4px rgba(67, 56, 202, 0.1);
+            box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.15);
         }
 
         textarea {
             resize: vertical;
-            min-height: 140px;
+            min-height: 120px;
         }
 
-        /* Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -155,16 +158,8 @@
             margin-top: 1rem;
         }
 
-        .btn-primary:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-1px);
-        }
-
-        .btn-primary:disabled {
-            background-color: var(--text-muted);
-            cursor: not-allowed;
-            transform: none;
-        }
+        .btn-primary:active { transform: scale(0.98); }
+        .btn-primary:disabled { background-color: var(--text-muted); cursor: not-allowed; opacity: 0.8; }
 
         .btn-outline {
             background-color: transparent;
@@ -172,23 +167,16 @@
             color: var(--secondary);
         }
 
-        .btn-outline:hover {
-            background-color: var(--bg);
-        }
-
         .btn-success {
             background-color: var(--success);
             color: white;
         }
 
-        .btn-success:hover {
-            background-color: #047857;
-        }
+        .btn-success:active { transform: scale(0.98); background-color: #047857; }
 
-        /* Progress Bar */
         .progress-container {
             display: none;
-            margin-top: 2rem;
+            margin-top: 1.5rem;
             padding: 1.5rem;
             background: var(--bg);
             border-radius: var(--radius-md);
@@ -200,7 +188,7 @@
             justify-content: space-between;
             font-size: 0.9rem;
             font-weight: 600;
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
             color: var(--secondary);
         }
 
@@ -216,10 +204,9 @@
             height: 100%;
             width: 0%;
             background-color: var(--primary);
-            transition: width 0.4s ease;
+            transition: width 0.3s ease;
         }
 
-        /* Results View */
         .results-header {
             display: flex;
             justify-content: space-between;
@@ -230,7 +217,7 @@
         }
 
         .preview-box {
-            background: var(--bg);
+            background: #F1F5F9;
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
             padding: 1.5rem;
@@ -239,26 +226,18 @@
             margin-bottom: 2rem;
         }
 
-        .preview-box::-webkit-scrollbar {
-            width: 6px;
-        }
-        .preview-box::-webkit-scrollbar-thumb {
-            background: var(--text-muted);
-            border-radius: 10px;
-        }
-
         .answer-block {
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             padding-bottom: 1.5rem;
-            border-bottom: 1px dashed var(--border);
+            border-bottom: 1px dashed #CBD5E1;
             white-space: pre-wrap;
+            font-size: 0.95rem;
         }
         .answer-block:last-child { border-bottom: none; }
 
-        /* Word Export Controls */
         .export-controls {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 1rem;
             background: #F8FAFC;
             padding: 1.5rem;
@@ -267,7 +246,6 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Animations */
         .spinner {
             width: 20px;
             height: 20px;
@@ -279,10 +257,35 @@
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        /* In-app browser warning banner */
+        .inapp-warning {
+            display: none;
+            background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+            border: 1px solid #F59E0B;
+            border-radius: var(--radius-md);
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            color: #92400E;
+            line-height: 1.5;
+        }
+        .inapp-warning i {
+            color: #D97706;
+            margin-right: 6px;
+        }
+        .inapp-warning a {
+            color: #92400E;
+            font-weight: 700;
+            text-decoration: underline;
+        }
+
         @media (max-width: 768px) {
             .container { padding: 1.5rem; }
-            .form-grid, .export-controls { grid-template-columns: 1fr; }
-            .results-header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+            .results-header { flex-direction: column; gap: 1rem; align-items: stretch; }
+            .results-header h2 { font-size: 1.5rem; text-align: center; }
+            .btn-outline { width: 100%; }
+            body { padding: 0; }
+            .container { border-radius: 0; min-height: 100vh; }
         }
     </style>
 </head>
@@ -291,9 +294,10 @@
 <div class="container">
     <div class="header-section">
         <h1>AI Answer Generator</h1>
-        <p>Premium Content Generation & Document Formatting</p>
+        <p>Premium Content & Document Formatter</p>
     </div>
 
+    <!-- FORM VIEW -->
     <div id="formView">
         <div class="form-grid">
             <div class="form-group">
@@ -322,7 +326,7 @@
         </div>
 
         <div class="form-group" style="margin-bottom: 1.5rem;">
-            <label>Long Questions <span style="font-weight: normal; color: var(--text-muted);">(Multi-level detailed answers)</span></label>
+            <label>Long Questions <span style="font-weight: normal; color: var(--text-muted);">(Detailed answers)</span></label>
             <textarea id="longQs" placeholder="Paste long questions here... (One per line)"></textarea>
         </div>
 
@@ -344,53 +348,64 @@
             <div class="progress-track">
                 <div class="progress-fill" id="progressBar"></div>
             </div>
-            <p id="errorDisplay" style="color: var(--danger); font-size: 0.9rem; margin-top: 1rem; display: none;"></p>
+            <p id="errorDisplay" style="color: var(--danger); font-size: 0.9rem; margin-top: 1rem; display: none; font-weight: bold; text-align: center;"></p>
         </div>
     </div>
 
+    <!-- RESULTS VIEW -->
     <div id="resultsView">
         <div class="results-header">
             <h2><i class="fas fa-check-circle" style="color: var(--success);"></i> Generation Complete</h2>
-            <button class="btn btn-outline" style="width: auto; padding: 0.5rem 1rem;" onclick="goBack()">
-                <i class="fas fa-arrow-left"></i> Back to Editor
+            <button class="btn btn-outline" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i> Edit Questions
             </button>
         </div>
 
-        <label style="margin-bottom: 0.5rem;">Document Export Controls</label>
+        <!-- In-app browser warning -->
+        <div class="inapp-warning" id="inappWarning">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>In-App Browser Detected!</strong><br>
+            Yahan se download nahi hoga. Page ko apne real browser (Chrome/Safari) mein kholein:
+            <br>Upar ⋮ ya <i class="fas fa-ellipsis-h"></i> icon dabayein → <strong>"Open in Browser"</strong> select karein.
+        </div>
+
+        <label style="margin-bottom: 0.5rem; display: block;">Word File Settings</label>
         <div class="export-controls">
             <div class="form-group">
                 <label>Font Family</label>
                 <select id="docFont">
                     <option value="Arial">Arial</option>
-                    <option value="Calibri">Calibri</option>
+                    <option value="Calibri" selected>Calibri</option>
                     <option value="Times New Roman">Times New Roman</option>
                 </select>
             </div>
             <div class="form-group">
                 <label>Font Size</label>
                 <select id="docSize">
-                    <option value="20">10 pt</option>
-                    <option value="24" selected>12 pt (Standard)</option>
-                    <option value="28">14 pt</option>
-                    <option value="32">16 pt</option>
+                    <option value="10">10 pt</option>
+                    <option value="12" selected>12 pt (Standard)</option>
+                    <option value="14">14 pt</option>
+                    <option value="16">16 pt</option>
+                    <option value="18">18 pt</option>
+                    <option value="20">20 pt</option>
+                    <option value="22">22 pt (Max)</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>Alignment</label>
+                <label>Text Alignment</label>
                 <select id="docAlign">
-                    <option value="left">Left</option>
-                    <option value="both" selected>Justify</option>
+                    <option value="left">Left Align</option>
+                    <option value="both" selected>Justified</option>
                 </select>
             </div>
         </div>
 
-        <button class="btn btn-success" onclick="downloadWordFile()" style="margin-bottom: 2rem;">
-            <i class="fas fa-file-word"></i> Download Word Document
+        <button id="downloadBtn" class="btn btn-success" onclick="downloadWordFile()" style="margin-bottom: 2rem;">
+            <i class="fas fa-download"></i> <span id="downloadText">Download Word Document</span>
         </button>
 
-        <label style="margin-bottom: 0.5rem;">Content Preview</label>
-        <div class="preview-box" id="answersList">
-            </div>
+        <label style="margin-bottom: 0.5rem; display: block;">Content Preview</label>
+        <div class="preview-box" id="answersList"></div>
     </div>
 </div>
 
@@ -398,17 +413,35 @@
     let completeQnaData = [];
     const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+    // --- Detect in-app browsers ---
+    function isInAppBrowser() {
+        const ua = navigator.userAgent || navigator.vendor || '';
+        // Instagram, Facebook, Snapchat, Twitter, LinkedIn, TikTok, Line, WeChat, etc.
+        const inAppPatterns = [
+            'FBAN', 'FBAV',        // Facebook
+            'Instagram',            // Instagram
+            'Snapchat',             // Snapchat
+            'Twitter',              // Twitter/X
+            'LinkedInApp',          // LinkedIn
+            'BytedanceWebview',     // TikTok
+            'musical_ly',           // TikTok alt
+            'Line/',                // Line
+            'MicroMessenger',       // WeChat
+            'WhatsApp',             // WhatsApp (rarely opens pages)
+            'Telegram'              // Telegram
+        ];
+        return inAppPatterns.some(p => ua.indexOf(p) > -1);
+    }
+
     function updateUI() {
         const select = document.getElementById('modelSelect');
         const provider = select.options[select.selectedIndex].dataset.provider;
         const badge = document.getElementById('keyBadge');
-        
         const colors = {
             'google': { text: 'Google API', color: '#10B981' },
             'groq': { text: 'Groq API', color: '#F59E0B' },
             'openrouter': { text: 'OpenRouter', color: '#4F46E5' }
         };
-
         badge.innerText = colors[provider]?.text || 'API Key';
         badge.style.color = colors[provider]?.color || '#4338CA';
     }
@@ -429,10 +462,9 @@
         const longQs = document.getElementById('longQs').value.split('\n').map(q => q.trim()).filter(q => q.length > 0);
         const shortQs = document.getElementById('shortQs').value.split('\n').map(q => q.trim()).filter(q => q.length > 0);
         
-        if (!apiKey || !subject) return alert('API Key aur Subject Name zaroori hai.');
-        if (longQs.length === 0 && shortQs.length === 0) return alert('Kam az kam ek question dalo.');
+        if (!apiKey || !subject) return alert('Bhai, API Key aur Subject Name zaroori hai.');
+        if (longQs.length === 0 && shortQs.length === 0) return alert('Kam az kam ek question dalo start karne ke liye.');
 
-        // Setup UI for processing
         document.getElementById('generateBtn').disabled = true;
         document.getElementById('btnText').style.display = 'none';
         document.getElementById('btnSpinner').style.display = 'block';
@@ -442,12 +474,10 @@
         document.getElementById('answersList').innerHTML = '';
         completeQnaData = [];
 
-        // Combine questions with context
         const allTasks = [];
         longQs.forEach(q => allTasks.push({ type: 'long', text: q }));
         shortQs.forEach(q => allTasks.push({ type: 'short', text: q }));
 
-        // Batch processing
         const batchSize = 3; 
         const batches = [];
         for (let i = 0; i < allTasks.length; i += batchSize) {
@@ -458,28 +488,26 @@
             const batch = batches[i];
             updateProgress(`Processing batch ${i + 1} of ${batches.length}...`, Math.round((i / batches.length) * 100));
 
-            // PROMPT ENGINEERING: Advanced Multi-level Prompting
             const prompt = `You are an expert professor in ${subject}. Answer the following questions.
-            CRITICAL FORMATTING RULES:
-            - For LONG questions: Provide highly detailed, multi-level comprehensive answers. Use Main Headings, Sub-headings, Bullet points, and detailed paragraphs. Explain concepts deeply.
-            - For SHORT questions: Provide concise, clear, and direct answers (3-5 sentences maximum).
-            - Always rewrite the question first before answering.
-            
-            Questions to answer:
-            ${batch.map((q, idx) => `[${q.type.toUpperCase()} QUESTION] ${idx + 1}. ${q.text}`).join('\n')}`;
+CRITICAL RULES:
+- LONG questions: Provide detailed, multi-level comprehensive answers. Use Main Headings, Sub-headings, Bullet points, and detailed paragraphs.
+- SHORT questions: Provide concise, direct answers (3-5 sentences maximum).
+- Always rewrite the question clearly before answering.
+
+Questions to answer:
+${batch.map((q, idx) => `[${q.type.toUpperCase()} QUESTION] ${idx + 1}. ${q.text}`).join('\n')}`;
 
             try {
                 let aiAnswer = await fetchAIResponse(provider, selectedModel, apiKey, prompt);
                 completeQnaData.push(aiAnswer);
                 
-                // Add to preview
                 const div = document.createElement('div');
                 div.className = 'answer-block';
                 div.innerText = aiAnswer;
                 document.getElementById('answersList').appendChild(div);
 
                 if (i < batches.length - 1) {
-                    updateProgress(`Cooling down to prevent rate limits...`, Math.round(((i+0.5) / batches.length) * 100));
+                    updateProgress(`Cooling down...`, Math.round(((i+0.5) / batches.length) * 100));
                     await sleep(4000);
                 }
             } catch (err) {
@@ -489,16 +517,21 @@
             }
         }
 
-        // Completion
         updateProgress('Generation Complete!', 100);
         document.getElementById('generateBtn').disabled = false;
         document.getElementById('btnText').style.display = 'inline';
         document.getElementById('btnSpinner').style.display = 'none';
         document.getElementById('progressWrapper').style.display = 'none';
         
-        if (completeQnaData.length > 0) {
+        if (completeQnaData.length > 0 && document.getElementById('errorDisplay').style.display === 'none') {
             document.getElementById('formView').style.display = 'none';
             document.getElementById('resultsView').style.display = 'block';
+            window.scrollTo(0, 0);
+
+            // Show in-app browser warning if needed
+            if (isInAppBrowser()) {
+                document.getElementById('inappWarning').style.display = 'block';
+            }
         }
     }
 
@@ -515,7 +548,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
             });
-            if (!res.ok) throw new Error('Google API Failed');
+            if (!res.ok) throw new Error('API Error - Check Key limit');
             const data = await res.json();
             return data.candidates[0].content.parts[0].text;
         } else {
@@ -525,81 +558,218 @@
                 headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ model: model, messages: [{ role: 'user', content: prompt }] })
             });
-            if (!res.ok) throw new Error(`${provider} API Failed`);
+            if (!res.ok) throw new Error(`${provider} API Error`);
             const data = await res.json();
             return data.choices[0].message.content;
         }
     }
 
-    // ROBUST WORD DOCUMENT GENERATOR (FIXED DOCX EXPORT)
+    // =====================================================
+    // BULLETPROOF MOBILE DOWNLOAD SYSTEM (5 Methods)
+    // =====================================================
+    function triggerDownload(blob, filename) {
+        const mimeType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+
+        // Ensure correct MIME type on blob
+        const properBlob = new Blob([blob], { type: mimeType });
+
+        // --- Method 1: FileSaver.js (most reliable cross-platform) ---
+        if (typeof saveAs !== 'undefined') {
+            try {
+                saveAs(properBlob, filename);
+                console.log('[Download] FileSaver.js method used');
+                return;
+            } catch(e) {
+                console.warn('[Download] FileSaver.js failed:', e);
+            }
+        }
+
+        // --- Method 2: Navigator share API (mobile native share sheet) ---
+        if (navigator.canShare && navigator.canShare({ files: [new File([properBlob], filename, { type: mimeType })] })) {
+            try {
+                const file = new File([properBlob], filename, { type: mimeType });
+                navigator.share({
+                    files: [file],
+                    title: filename,
+                    text: 'Your generated document'
+                }).then(() => {
+                    console.log('[Download] Web Share API method used');
+                }).catch((e) => {
+                    console.warn('[Download] Web Share failed, falling back:', e);
+                    fallbackDownload(properBlob, filename);
+                });
+                return;
+            } catch(e) {
+                console.warn('[Download] Web Share API setup failed:', e);
+            }
+        }
+
+        // --- Method 3: Standard anchor click ---
+        fallbackDownload(properBlob, filename);
+    }
+
+    function fallbackDownload(blob, filename) {
+        // Method 3: Standard <a> download
+        try {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            
+            // Use both click methods for maximum compatibility
+            if (a.click) {
+                a.click();
+            } else {
+                const clickEvent = new MouseEvent('click', {
+                    view: window,
+                    bubbles: true,
+                    cancelable: true
+                });
+                a.dispatchEvent(clickEvent);
+            }
+
+            console.log('[Download] Anchor click method used');
+            
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 5000);
+            return;
+        } catch(e) {
+            console.warn('[Download] Anchor method failed:', e);
+        }
+
+        // Method 4: window.open with blob URL
+        try {
+            const url = URL.createObjectURL(blob);
+            const newWin = window.open(url, '_blank');
+            if (!newWin) {
+                // Popup blocked, try location
+                window.location.href = url;
+            }
+            console.log('[Download] window.open method used');
+            setTimeout(() => URL.revokeObjectURL(url), 10000);
+            return;
+        } catch(e) {
+            console.warn('[Download] window.open failed:', e);
+        }
+
+        // Method 5: Base64 data URI (last resort)
+        try {
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                const a = document.createElement('a');
+                a.href = reader.result;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                console.log('[Download] Base64 fallback method used');
+            };
+            reader.readAsDataURL(blob);
+        } catch(e) {
+            console.error('[Download] All methods failed:', e);
+            alert('Download nahi ho raha. Please apne phone ka Chrome/Safari browser use karein (Instagram/Facebook ke andar se nahi hoga).');
+        }
+    }
+
     async function downloadWordFile() {
         if (completeQnaData.length === 0) return;
         
-        const subject = document.getElementById('subject').value || 'Generated_Answers';
-        const fontFamily = document.getElementById('docFont').value;
-        const fontSize = parseInt(document.getElementById('docSize').value); // Half-points
-        const alignVal = document.getElementById('docAlign').value;
-        
-        const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } = docx;
-        
-        const alignObj = alignVal === 'left' ? AlignmentType.LEFT : AlignmentType.JUSTIFIED;
-        const docChildren = [];
-
-        // Title
-        docChildren.push(new Paragraph({
-            text: `${subject} - Comprehensive Answers`,
-            heading: HeadingLevel.HEADING_1,
-            alignment: AlignmentType.CENTER,
-            spacing: { after: 400 }
-        }));
-
-        completeQnaData.forEach(textBlock => {
-            const lines = textBlock.split('\n');
-            
-            lines.forEach(line => {
-                const cleanLine = line.trim();
-                if (!cleanLine) return; // Skip empty lines to prevent Word crash
-
-                let isBold = false;
-                let textContent = cleanLine;
-
-                // Simple markdown bold parsing for headers generated by AI (e.g., **Heading**)
-                if (textContent.startsWith('**') && textContent.endsWith('**')) {
-                    isBold = true;
-                    textContent = textContent.replace(/\*\*/g, '');
-                }
-
-                docChildren.push(new Paragraph({
-                    children: [
-                        new TextRun({
-                            text: textContent,
-                            font: fontFamily,
-                            size: fontSize,
-                            bold: isBold || cleanLine.startsWith('#') || cleanLine.startsWith('[')
-                        })
-                    ],
-                    alignment: alignObj,
-                    spacing: { after: 200, line: 360 } // 1.5 line spacing
-                }));
-            });
-            
-            // Separator between batches
-            docChildren.push(new Paragraph({ text: "", spacing: { after: 400 } }));
-        });
-
-        const doc = new Document({
-            sections: [{
-                properties: { page: { margin: { top: 1440, right: 1440, bottom: 1440, left: 1440 } } }, // 1 inch margins (Safe for Word)
-                children: docChildren
-            }]
-        });
+        const downloadBtn = document.getElementById('downloadBtn');
+        const originalText = document.getElementById('downloadText').innerText;
+        document.getElementById('downloadText').innerText = "Processing File...";
+        downloadBtn.disabled = true;
 
         try {
-            const blob = await Packer.toBlob(doc);
-            saveAs(blob, `${subject.replace(/[^a-z0-9]/gi, '_')}.docx`);
+            const subject = document.getElementById('subject').value || 'Generated_Answers';
+            const fontFamily = document.getElementById('docFont').value;
+            const fontSizeVal = parseInt(document.getElementById('docSize').value) * 2; 
+            const alignVal = document.getElementById('docAlign').value;
+            
+            const AlignmentType = docx.AlignmentType;
+            const HeadingLevel = docx.HeadingLevel;
+            const alignObj = alignVal === 'left' ? AlignmentType.LEFT : AlignmentType.JUSTIFIED;
+            const docChildren = [];
+
+            docChildren.push(new docx.Paragraph({
+                text: `${subject} - Comprehensive Answers`,
+                heading: HeadingLevel.HEADING_1,
+                alignment: AlignmentType.CENTER,
+                spacing: { after: 400 }
+            }));
+
+            completeQnaData.forEach((textBlock, index) => {
+                const lines = textBlock.split('\n');
+                
+                lines.forEach(line => {
+                    const cleanLine = line.replace(/\r/g, '').trim();
+                    if (cleanLine === '') {
+                        docChildren.push(new docx.Paragraph({ text: "", spacing: { after: 200 } }));
+                        return;
+                    }
+
+                    let isBold = false;
+                    let textContent = cleanLine;
+
+                    if (textContent.includes('**')) {
+                        isBold = true;
+                        textContent = textContent.replace(/\*\*/g, '');
+                    }
+                    if (textContent.startsWith('#')) {
+                        isBold = true;
+                        textContent = textContent.replace(/#/g, '').trim();
+                    }
+
+                    docChildren.push(new docx.Paragraph({
+                        children: [
+                            new docx.TextRun({
+                                text: textContent,
+                                font: fontFamily,
+                                size: fontSizeVal,
+                                bold: isBold
+                            })
+                        ],
+                        alignment: alignObj,
+                        spacing: { after: 120, line: 360 } 
+                    }));
+                });
+                
+                if(index < completeQnaData.length - 1) {
+                    docChildren.push(new docx.Paragraph({
+                        text: "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+                        alignment: AlignmentType.CENTER,
+                        spacing: { before: 400, after: 400 }
+                    }));
+                }
+            });
+
+            const doc = new docx.Document({
+                creator: "AI Solver",
+                title: subject,
+                sections: [{
+                    properties: { page: { margin: { top: 1440, right: 1440, bottom: 1440, left: 1440 } } },
+                    children: docChildren
+                }]
+            });
+
+            // Generate blob and trigger robust download
+            const blob = await docx.Packer.toBlob(doc);
+            const safeFilename = `${subject.replace(/[^a-z0-9]/gi, '_')}.docx`;
+            
+            triggerDownload(blob, safeFilename);
+            document.getElementById('downloadText').innerText = "Downloaded! ✓";
+            
         } catch (err) {
-            console.error(err);
-            alert("Error: Word file download fail ho gaya. Console check karein.");
+            console.error("Docx Error:", err);
+            alert("Download Fail: " + err.message);
+        } finally {
+            setTimeout(() => {
+                document.getElementById('downloadText').innerText = originalText;
+                downloadBtn.disabled = false;
+            }, 3000);
         }
     }
 </script>
